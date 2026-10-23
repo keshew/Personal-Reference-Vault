@@ -6,8 +6,27 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		A02000000000000000000010 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = "Personal Reference Vault";
+		};
+		A03000000000000000000010 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = "Personal Reference Vault";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* Personal Reference Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Personal Reference Vault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A02000000000000000000003 /* Personal Reference VaultTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Personal Reference VaultTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A03000000000000000000003 /* Personal Reference VaultUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Personal Reference VaultUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +35,30 @@
 			path = "Personal Reference Vault";
 			sourceTree = "<group>";
 		};
+		A02000000000000000000002 /* Personal Reference VaultTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Personal Reference VaultTests";
+			sourceTree = "<group>";
+		};
+		A03000000000000000000002 /* Personal Reference VaultUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Personal Reference VaultUITests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		A02000000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		A03000000000000000000005 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
 			);
@@ -31,6 +70,8 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000010 /* Personal Reference Vault */,
+				A02000000000000000000002 /* Personal Reference VaultTests */,
+				A03000000000000000000002 /* Personal Reference VaultUITests */,
 				000000000000000000000020 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -39,6 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* Personal Reference Vault.app */,
+				A03000000000000000000003 /* Personal Reference VaultUITests.xctest */,
+				A02000000000000000000003 /* Personal Reference VaultTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -63,6 +106,48 @@
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* Personal Reference Vault.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A02000000000000000000001 /* Personal Reference VaultTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A02000000000000000000007 /* Build configuration list for PBXNativeTarget "Personal Reference VaultTests" */;
+			buildPhases = (
+				A02000000000000000000004 /* Sources */,
+				A02000000000000000000005 /* Frameworks */,
+				A02000000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A02000000000000000000011 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A02000000000000000000002 /* Personal Reference VaultTests */,
+			);
+			name = "Personal Reference VaultTests";
+			productName = "Personal Reference VaultTests";
+			productReference = A02000000000000000000003 /* Personal Reference VaultTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A03000000000000000000001 /* Personal Reference VaultUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A03000000000000000000007 /* Build configuration list for PBXNativeTarget "Personal Reference VaultUITests" */;
+			buildPhases = (
+				A03000000000000000000004 /* Sources */,
+				A03000000000000000000005 /* Frameworks */,
+				A03000000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A03000000000000000000011 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A03000000000000000000002 /* Personal Reference VaultUITests */,
+			);
+			name = "Personal Reference VaultUITests";
+			productName = "Personal Reference VaultUITests";
+			productReference = A03000000000000000000003 /* Personal Reference VaultUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -94,12 +179,24 @@
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* Personal Reference Vault */,
+				A03000000000000000000001 /* Personal Reference VaultUITests */,
+				A02000000000000000000001 /* Personal Reference VaultTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		000000000000000140000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		A02000000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		A03000000000000000000006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -112,7 +209,30 @@
 			files = (
 			);
 		};
+		A02000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		A03000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A02000000000000000000011 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* Personal Reference Vault */;
+			targetProxy = A02000000000000000000010 /* PBXContainerItemProxy */;
+		};
+		A03000000000000000000011 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* Personal Reference Vault */;
+			targetProxy = A03000000000000000000010 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "Personal Reference Vault" */ = {
@@ -169,7 +289,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -233,7 +353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 27.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -250,18 +370,24 @@
 		000000000000000111000000 /* Debug configuration for PBXNativeTarget "Personal Reference Vault" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Reference Vault";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Attach a photo to a reference when you choose Take Photo.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -272,33 +398,41 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
+				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		000000000000000112000000 /* Release configuration for PBXNativeTarget "Personal Reference Vault" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Reference Vault";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Attach a photo to a reference when you choose Take Photo.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -309,15 +443,83 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "devplaceholder.$(PROJECT_UNIQUE_VALUE:identifier).$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
+				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A02000000000000000000008 /* Debug configuration for PBXNativeTarget "Personal Reference VaultTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = devplaceholder.PSVFEHTI.vaulttest2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Personal Reference Vault.app/Personal Reference Vault";
+			};
+			name = Debug;
+		};
+		A02000000000000000000009 /* Release configuration for PBXNativeTarget "Personal Reference VaultTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = devplaceholder.PSVFEHTI.vaulttest2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Personal Reference Vault.app/Personal Reference Vault";
+			};
+			name = Release;
+		};
+		A03000000000000000000008 /* Debug configuration for PBXNativeTarget "Personal Reference VaultUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = devplaceholder.PSVFEHTI.vaulttest3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "Personal Reference Vault";
+			};
+			name = Debug;
+		};
+		A03000000000000000000009 /* Release configuration for PBXNativeTarget "Personal Reference VaultUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = devplaceholder.PSVFEHTI.vaulttest3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = "Personal Reference Vault";
 			};
 			name = Release;
 		};
@@ -337,6 +539,22 @@
 			buildConfigurations = (
 				000000000000000111000000 /* Debug configuration for PBXNativeTarget "Personal Reference Vault" */,
 				000000000000000112000000 /* Release configuration for PBXNativeTarget "Personal Reference Vault" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		A02000000000000000000007 /* Build configuration list for PBXNativeTarget "Personal Reference VaultTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A02000000000000000000008 /* Debug configuration for PBXNativeTarget "Personal Reference VaultTests" */,
+				A02000000000000000000009 /* Release configuration for PBXNativeTarget "Personal Reference VaultTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		A03000000000000000000007 /* Build configuration list for PBXNativeTarget "Personal Reference VaultUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A03000000000000000000008 /* Debug configuration for PBXNativeTarget "Personal Reference VaultUITests" */,
+				A03000000000000000000009 /* Release configuration for PBXNativeTarget "Personal Reference VaultUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};
