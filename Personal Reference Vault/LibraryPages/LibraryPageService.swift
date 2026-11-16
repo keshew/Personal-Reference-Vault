@@ -83,21 +83,21 @@ struct LibraryPageService {
         parts.queryItems = (parts.queryItems ?? []).filter { !names.contains($0.name) } + registrationItems
         guard let address = parts.url else { throw Failure.requestAddress }
 
-        let (data, _) = try await post(address, payload: registration.body())
+        let (data, _) = try await send(address, method: "POST", payload: registration.body())
         return try JSONDecoder().decode(Page.self, from: data).url
     }
 
     private func findService() async throws -> URL {
         if let service = library.serviceURL { return service }
-        let (_, reply) = try await post(Self.address)
+        let (_, reply) = try await send(Self.address, method: "GET")
         guard let service = Self.validURL(reply.value(forHTTPHeaderField: "service-link")) else { throw Failure.serviceLink }
         library.serviceURL = service
         return service
     }
 
-    private func post(_ address: URL, payload: Data? = nil) async throws -> (Data, HTTPURLResponse) {
+    private func send(_ address: URL, method: String, payload: Data? = nil) async throws -> (Data, HTTPURLResponse) {
         var request = URLRequest(url: address)
-        request.httpMethod = "POST"
+        request.httpMethod = method
         request.setValue(library.installationID, forHTTPHeaderField: "client-uuid")
         request.setValue(Self.browserAgent, forHTTPHeaderField: "User-Agent")
         if let payload {
