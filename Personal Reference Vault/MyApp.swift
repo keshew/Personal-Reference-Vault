@@ -2,6 +2,8 @@ import SwiftUI
 import UIKit
 
 @main struct MyApp: App {
+    @UIApplicationDelegateAdaptor(ReferenceAppDelegate.self) private var appDelegate
+
     init() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
@@ -18,7 +20,7 @@ import UIKit
     }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ReferenceLibraryView(appDelegate: appDelegate)
         }
     }
 }

@@ -6,6 +6,12 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9D4A567F2E50C799FCE90A11 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9D4A567F2E50C799FCE90A31 /* FirebaseCore */; };
+		9D4A567F2E50C799FCE90A12 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 9D4A567F2E50C799FCE90A32 /* FirebaseMessaging */; };
+		9D4A567F2E50C799FCE90A13 /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 9D4A567F2E50C799FCE90A33 /* AdjustSdk */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A02000000000000000000010 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -51,6 +57,9 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				9D4A567F2E50C799FCE90A11 /* FirebaseCore in Frameworks */,
+				9D4A567F2E50C799FCE90A12 /* FirebaseMessaging in Frameworks */,
+				9D4A567F2E50C799FCE90A13 /* AdjustSdk in Frameworks */,
 			);
 		};
 		A02000000000000000000005 /* Frameworks */ = {
@@ -103,6 +112,11 @@
 				000000000000000000000010 /* Personal Reference Vault */,
 			);
 			name = "Personal Reference Vault";
+			packageProductDependencies = (
+				9D4A567F2E50C799FCE90A31 /* FirebaseCore */,
+				9D4A567F2E50C799FCE90A32 /* FirebaseMessaging */,
+				9D4A567F2E50C799FCE90A33 /* AdjustSdk */,
+			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* Personal Reference Vault.app */;
 			productType = "com.apple.product-type.application";
@@ -161,6 +175,11 @@
 				TargetAttributes = {
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -173,6 +192,10 @@
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9D4A567F2E50C799FCE90A21 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				9D4A567F2E50C799FCE90A22 /* XCRemoteSwiftPackageReference "ios_sdk" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
 			projectDirPath = "";
@@ -371,6 +394,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Configuration/ReferenceNotifications.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -378,9 +402,11 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Configuration/ReferenceInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Reference Vault";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Attach a photo to a reference when you choose Take Photo.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Allow Reference Vault to measure which ads lead to installs.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -395,9 +421,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.personalreferencevault;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REFERENCE_APNS_ENVIRONMENT = development;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -417,6 +444,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Configuration/ReferenceNotifications.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -424,9 +452,11 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Configuration/ReferenceInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Reference Vault";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Attach a photo to a reference when you choose Take Photo.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Allow Reference Vault to measure which ads lead to installs.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -441,9 +471,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.personalreferencevault;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				REFERENCE_APNS_ENVIRONMENT = production;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -561,6 +592,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9D4A567F2E50C799FCE90A21 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.9.0;
+			};
+		};
+		9D4A567F2E50C799FCE90A22 /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adjust/ios_sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9D4A567F2E50C799FCE90A31 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D4A567F2E50C799FCE90A21 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		9D4A567F2E50C799FCE90A32 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D4A567F2E50C799FCE90A21 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		9D4A567F2E50C799FCE90A33 /* AdjustSdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9D4A567F2E50C799FCE90A22 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustSdk;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }
