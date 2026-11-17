@@ -10,6 +10,7 @@ final class LibrarySession {
     private struct Snapshot: Codable {
         var installationID: UUID? = nil
         var clientID: UUID? = nil
+        var serverClientID: UUID? = nil
         var serviceURL: URL? = nil
         var pageURL: URL? = nil
         var messagingProject: String? = nil
@@ -48,6 +49,16 @@ final class LibrarySession {
         }
     }
 
+    var requestClientID: String {
+        snapshot.serverClientID?.uuidString.lowercased() ?? clientID
+    }
+
+    func recordClientID(_ value: String?) {
+        guard let raw = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              let identifier = UUID(uuidString: raw), identifier != snapshot.serverClientID else { return }
+        snapshot.serverClientID = identifier
+    }
+
     var serviceURL: URL? {
         get { snapshot.serviceURL }
         set { snapshot.serviceURL = newValue }
@@ -59,7 +70,10 @@ final class LibrarySession {
     }
 
     var notificationToken: String? {
-        get { snapshot.notificationToken }
+        get {
+            guard let token = snapshot.notificationToken, !token.isEmpty, token != "null" else { return nil }
+            return token
+        }
         set { snapshot.notificationToken = newValue }
     }
 

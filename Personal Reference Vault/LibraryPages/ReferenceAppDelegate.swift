@@ -8,9 +8,11 @@ import UserNotifications
 
 final class ReferenceAppDelegate: NSObject, ObservableObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     @Published private(set) var notificationSelection = 0
+    @Published private(set) var registrationRevision = 0
 
     private let adjustToken = "o9rfryky794w"
     private let attribution = ReferenceAttributionObserver()
+    private var tokenRequest: Task<Void, Never>?
 
     func application(
         _ application: UIApplication,
@@ -24,10 +26,12 @@ final class ReferenceAppDelegate: NSObject, ObservableObject, UIApplicationDeleg
         messaging.delegate = self
         messaging.isAutoInitEnabled = true
         UNUserNotificationCenter.current().delegate = self
+        application.registerForRemoteNotifications()
 
         if let config = ADJConfig(appToken: adjustToken, environment: ADJEnvironmentProduction) {
             config.delegate = attribution
             config.logLevel = .info
+            config.attConsentWaitingInterval = 30
             Adjust.initSdk(config)
         }
 
@@ -40,15 +44,31 @@ final class ReferenceAppDelegate: NSObject, ObservableObject, UIApplicationDeleg
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken token: Data) {
         let messaging = Messaging.messaging()
         messaging.apnsToken = token
-        messaging.token { token, _ in Self.updateToken(token) }
+        tokenRequest?.cancel()
+        tokenRequest = Task { @MainActor [weak self] in
+            for delay in [0, 2, 5] {
+                do {
+                    if delay > 0 { try await Task.sleep(for: .seconds(delay)) }
+                    try Task.checkCancellation()
+                    let registration = try await messaging.token()
+                    try Task.checkCancellation()
+                    self?.retainToken(registration)
+                    return
+                } catch {
+                    if Task.isCancelled { return }
+                }
+            }
+            print("Diamond Luck: could not retrieve FCM token after APNs registration")
+        }
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Reference Vault: APNs registration failed")
+        print("Diamond Luck: APNs registration failed")
     }
 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken token: String?) {
-        Self.updateToken(token)
+        guard messaging.apnsToken != nil else { return }
+        DispatchQueue.main.async { [weak self] in self?.retainToken(token) }
     }
 
     func userNotificationCenter(
@@ -87,9 +107,12 @@ final class ReferenceAppDelegate: NSObject, ObservableObject, UIApplicationDeleg
         completion(.newData)
     }
 
-    private static func updateToken(_ rawToken: String?) {
-        guard let token = rawToken?.trimmingCharacters(in: .whitespacesAndNewlines), !token.isEmpty else { return }
-        DispatchQueue.main.async { LibrarySession.shared.notificationToken = token }
+    @MainActor
+    private func retainToken(_ rawToken: String?) {
+        guard let token = rawToken?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !token.isEmpty, token != "null", token != LibrarySession.shared.notificationToken else { return }
+        LibrarySession.shared.notificationToken = token
+        registrationRevision += 1
     }
 
     private static func identifier(in payload: Any) -> String? {
@@ -111,12 +134,15 @@ final class ReferenceAppDelegate: NSObject, ObservableObject, UIApplicationDeleg
     }
 }
 
-private final class ReferenceAttributionObserver: NSObject, AdjustDelegate {
+final class ReferenceAttributionObserver: NSObject, AdjustDelegate {
     func adjustAttributionChanged(_ attribution: ADJAttribution?) {
-        guard let attribution, ATTrackingManager.trackingAuthorizationStatus != .notDetermined else { return }
-        let json = attribution.jsonResponse
-            .flatMap { try? JSONSerialization.data(withJSONObject: $0) }
-            .flatMap { String(data: $0, encoding: .utf8) }
-        DispatchQueue.main.async { LibrarySession.shared.attributionJSON = json }
+        DispatchQueue.main.async { Self.record(attribution) }
+    }
+
+    static func record(_ attribution: ADJAttribution?) {
+        guard ATTrackingManager.trackingAuthorizationStatus == .authorized,
+              let values = attribution?.jsonResponse,
+              let json = try? JSONSerialization.data(withJSONObject: values) else { return }
+        LibrarySession.shared.attributionJSON = String(data: json, encoding: .utf8)
     }
 }

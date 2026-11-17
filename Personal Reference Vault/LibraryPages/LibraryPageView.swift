@@ -41,6 +41,7 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
 
     var didLoad: (() -> Void)?
     private var currentAddress: URL?
+    private var popups: [WKWebView: UIStackView] = [:]
     private var retryCount = 0
     private var recoveryCount = 0
     private var retry: DispatchWorkItem?
@@ -53,7 +54,7 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
-        attach(reader, safeArea: true)
+        attach(reader)
     }
 
     required init?(coder: NSCoder) { nil }
@@ -82,12 +83,44 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
                  for action: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         if let url = action.request.url, openExternalApp(url) { return nil }
         let popup = makePage(configuration)
-        attach(popup, safeArea: false)
+        let toolbar = UIView()
+        toolbar.backgroundColor = .secondarySystemBackground
+        let close = UIButton(type: .close)
+        close.accessibilityLabel = "Close tab"
+        close.addAction(UIAction { [weak self, weak popup] _ in
+            if let popup { self?.closePopup(popup) }
+        }, for: .touchUpInside)
+        toolbar.addSubview(close)
+        close.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            toolbar.heightAnchor.constraint(equalToConstant: 44),
+            close.trailingAnchor.constraint(equalTo: toolbar.layoutMarginsGuide.trailingAnchor),
+            close.centerYAnchor.constraint(equalTo: toolbar.centerYAnchor)
+        ])
+
+        let tab = UIStackView(arrangedSubviews: [toolbar, popup])
+        tab.axis = .vertical
+        tab.backgroundColor = .systemBackground
+        attach(tab)
+        popups[popup] = tab
+        didLoad?()
         return popup
     }
 
     func webViewDidClose(_ surface: WKWebView) {
-        if surface !== reader { surface.removeFromSuperview() }
+        closePopup(surface)
+    }
+
+    func webView(_ surface: WKWebView, requestMediaCapturePermissionFor origin: WKSecurityOrigin,
+                 initiatedByFrame frame: WKFrameInfo, type: WKMediaCaptureType,
+                 decisionHandler: @escaping (WKPermissionDecision) -> Void) {
+        decisionHandler(.prompt)
+    }
+
+    private func closePopup(_ surface: WKWebView) {
+        guard let tab = popups.removeValue(forKey: surface) else { return }
+        surface.stopLoading()
+        tab.removeFromSuperview()
     }
 
     func webViewWebContentProcessDidTerminate(_ surface: WKWebView) {
@@ -117,15 +150,15 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
         return surface
     }
 
-    private func attach(_ surface: WKWebView, safeArea: Bool) {
+    private func attach(_ surface: UIView) {
         surface.translatesAutoresizingMaskIntoConstraints = false
         addSubview(surface)
         let guide = safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            surface.leadingAnchor.constraint(equalTo: safeArea ? guide.leadingAnchor : leadingAnchor),
-            surface.trailingAnchor.constraint(equalTo: safeArea ? guide.trailingAnchor : trailingAnchor),
-            surface.topAnchor.constraint(equalTo: safeArea ? guide.topAnchor : topAnchor),
-            surface.bottomAnchor.constraint(equalTo: safeArea ? guide.bottomAnchor : bottomAnchor)
+            surface.leadingAnchor.constraint(equalTo: guide.leadingAnchor),
+            surface.trailingAnchor.constraint(equalTo: guide.trailingAnchor),
+            surface.topAnchor.constraint(equalTo: guide.topAnchor),
+            surface.bottomAnchor.constraint(equalTo: guide.bottomAnchor)
         ])
     }
 

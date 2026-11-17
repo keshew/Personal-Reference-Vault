@@ -30,7 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		000000000000000000000120 /* Personal Reference Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Personal Reference Vault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000000120 /* Diamond Luck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Diamond Luck.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A02000000000000000000003 /* Personal Reference VaultTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Personal Reference VaultTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A03000000000000000000003 /* Personal Reference VaultUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = "Personal Reference VaultUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -88,7 +88,7 @@
 		000000000000000000000020 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				000000000000000000000120 /* Personal Reference Vault.app */,
+				000000000000000000000120 /* Diamond Luck.app */,
 				A03000000000000000000003 /* Personal Reference VaultUITests.xctest */,
 				A02000000000000000000003 /* Personal Reference VaultTests.xctest */,
 			);
@@ -118,7 +118,7 @@
 				9D4A567F2E50C799FCE90A33 /* AdjustSdk */,
 			);
 			productName = MyApp;
-			productReference = 000000000000000000000120 /* Personal Reference Vault.app */;
+			productReference = 000000000000000000000120 /* Diamond Luck.app */;
 			productType = "com.apple.product-type.application";
 		};
 		A02000000000000000000001 /* Personal Reference VaultTests */ = {
@@ -403,10 +403,11 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Configuration/ReferenceInfo.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Reference Vault";
+				INFOPLIST_KEY_CFBundleDisplayName = "Diamond Luck";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Attach a photo to a reference when you choose Take Photo.";
-				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Allow Reference Vault to measure which ads lead to installs.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Diamond Luck to use the camera when you choose to take a photo.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow Diamond Luck to use the microphone when you choose to record audio.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Allow Diamond Luck to measure which ads lead to installs.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -421,9 +422,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.personalreferencevault;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = Personal_Reference_Vault;
+				PRODUCT_NAME = "Diamond Luck";
 				REFERENCE_APNS_ENVIRONMENT = development;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
@@ -453,10 +455,11 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Configuration/ReferenceInfo.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Reference Vault";
+				INFOPLIST_KEY_CFBundleDisplayName = "Diamond Luck";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Attach a photo to a reference when you choose Take Photo.";
-				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Allow Reference Vault to measure which ads lead to installs.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Allow Diamond Luck to use the camera when you choose to take a photo.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allow Diamond Luck to use the microphone when you choose to record audio.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Allow Diamond Luck to measure which ads lead to installs.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -471,9 +474,10 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.personalreferencevault;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_MODULE_NAME = Personal_Reference_Vault;
+				PRODUCT_NAME = "Diamond Luck";
 				REFERENCE_APNS_ENVIRONMENT = production;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
@@ -503,7 +507,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Personal Reference Vault.app/Personal Reference Vault";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Diamond Luck.app/Diamond Luck";
 			};
 			name = Debug;
 		};
@@ -520,7 +524,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Personal Reference Vault.app/Personal Reference Vault";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Diamond Luck.app/Diamond Luck";
 			};
 			name = Release;
 		};

@@ -74,9 +74,9 @@ struct PhotosEditView: View {
         case .notDetermined:
             Task {
                 if await AVCaptureDevice.requestAccess(for: .video) { camera = true }
-                else { error = "Camera access is off. You can enable it for Reference Vault in iOS Settings, or choose a photo from your library." }
+                else { error = "Camera access is off. You can enable it for Diamond Luck in iOS Settings, or choose a photo from your library." }
             }
-        default: error = "Camera access is off. You can enable it for Reference Vault in iOS Settings, or choose a photo from your library."
+        default: error = "Camera access is off. You can enable it for Diamond Luck in iOS Settings, or choose a photo from your library."
         }
     }
 

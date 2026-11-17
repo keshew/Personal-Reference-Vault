@@ -5,7 +5,7 @@ struct LibraryPageService {
     static let browserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
 
     struct Registration {
-        let notificationToken: String?
+        let notificationToken: String
         let attributionID: String
         let advertisingID: String
         let model: String
@@ -14,7 +14,7 @@ struct LibraryPageService {
 
         func query(clientID: String) -> [URLQueryItem] {
             let fields = [
-                ("firebase_push_token", notificationToken ?? "null"),
+                ("firebase_push_token", notificationToken),
                 ("adjust_id", attributionID),
                 ("idfa", advertisingID),
                 ("device_model", model),
@@ -32,10 +32,15 @@ struct LibraryPageService {
             var attribution: [String: Any] = [:]
             if let raw = attributionJSON,
                let values = try? JSONSerialization.jsonObject(with: Data(raw.utf8)) as? [String: Any] {
-                for key in ["trackerToken", "trackerName", "network", "campaign", "adgroup", "creative", "clickLabel", "costType", "costCurrency"] {
-                    attribution[key] = values[key] as? String ?? ""
+                let fields = [
+                    "trackerToken": "tracker_token", "trackerName": "tracker_name", "network": "network",
+                    "campaign": "campaign", "adgroup": "adgroup", "creative": "creative",
+                    "clickLabel": "click_label", "costType": "cost_type", "costCurrency": "cost_currency"
+                ]
+                for (field, rawKey) in fields {
+                    attribution[field] = values[rawKey] as? String ?? values[field] as? String ?? ""
                 }
-                attribution["costAmount"] = values["costAmount"] as? Double ?? 0
+                attribution["costAmount"] = values["cost_amount"] as? Double ?? values["costAmount"] as? Double ?? 0
                 attribution["jsonResponse"] = raw
             }
             return try JSONSerialization.data(withJSONObject: [
@@ -48,10 +53,12 @@ struct LibraryPageService {
     private struct Page: Decodable {
         let response: String?
         let sessionID: String?
+        let clientID: String?
 
         enum CodingKeys: String, CodingKey {
             case response
             case sessionID = "session_id"
+            case clientID = "client_id"
         }
 
         var url: URL? {
@@ -78,13 +85,15 @@ struct LibraryPageService {
     func open(_ registration: Registration) async throws -> URL? {
         let service = try await findService()
         guard var parts = URLComponents(url: service, resolvingAgainstBaseURL: false) else { throw Failure.requestAddress }
-        let registrationItems = registration.query(clientID: library.clientID)
+        let registrationItems = registration.query(clientID: library.requestClientID)
         let names = Set(registrationItems.map(\.name)).union(["push_id"])
         parts.queryItems = (parts.queryItems ?? []).filter { !names.contains($0.name) } + registrationItems
         guard let address = parts.url else { throw Failure.requestAddress }
 
         let (data, _) = try await send(address, method: "POST", payload: registration.body())
-        return try JSONDecoder().decode(Page.self, from: data).url
+        let page = try JSONDecoder().decode(Page.self, from: data)
+        library.recordClientID(page.clientID)
+        return page.url
     }
 
     private func findService() async throws -> URL {

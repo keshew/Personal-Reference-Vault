@@ -9,7 +9,7 @@ struct SettingsView: View {
                     HStack(spacing: 16) {
                         BrandMark(size: 55)
                         VStack(alignment: .leading, spacing: 7) {
-                            VaultEyebrow(text: "Personal Reference Vault", color: VaultStyle.gold)
+                            VaultEyebrow(text: "Diamond Luck", color: VaultStyle.gold)
                             Text("Considered.\nDown to the details.").font(.system(size: 24, weight: .regular, design: .serif)).foregroundStyle(VaultStyle.ivory)
                         }
                         Spacer(minLength: 0)
