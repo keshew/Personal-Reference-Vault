@@ -7,6 +7,7 @@ import UserNotifications
 struct ReferenceLibraryView: View {
     @ObservedObject var appDelegate: ReferenceAppDelegate
 
+    @State private var loadedPage: URL?
     @Environment(\.scenePhase) private var scenePhase
     @State private var page: URL?
     @State private var completedLaunch = false
@@ -22,6 +23,7 @@ struct ReferenceLibraryView: View {
     private let library = LibrarySession.shared
 
     var body: some View {
+        let webContentIsReady = isPageVisible
         ZStack {
             if completedLaunch {
                 TidePlayroom(tab: $tab, path: $games)
@@ -47,24 +49,48 @@ struct ReferenceLibraryView: View {
         .fullScreenCover(isPresented: Binding(
             get: { page != nil && games.isEmpty && !staysInPlayroom },
             set: { _ in }
-        )) {
-            LibraryPageView(address: $page)
+        ), onDismiss: { loadedPage = nil }) {
+            LibraryPageView(address: page, didLoad: { loadedPage = $0 })
                 .ignoresSafeArea()
                 .safeAreaInset(edge: .top, spacing: 0) {
-                    Button {
-                        staysInPlayroom = true
-                        tab = .play
-                    } label: {
-                        Label("Back to play", systemImage: "arrow.left")
-                            .font(.subheadline.weight(.semibold))
-                            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-                            .padding(.horizontal, 20)
+                    if webContentIsReady {
+                        Button {
+                            staysInPlayroom = true
+                            tab = .play
+                        } label: {
+                            Label("Back to play", systemImage: "arrow.left")
+                                .font(.subheadline.weight(.semibold))
+                                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                                .padding(.horizontal, 20)
+                        }
+                        .buttonStyle(.plain)
+                        .background(.regularMaterial)
                     }
-                    .buttonStyle(.plain)
-                    .background(.regularMaterial)
+                }
+                .accessibilityHidden(!webContentIsReady)
+                .overlay {
+                    if !webContentIsReady {
+                        LibraryOpeningView(title: "Opening page…")
+                    }
                 }
                 .interactiveDismissDisabled()
+                .task(id: page) {
+                    guard let requested = page, !isPageVisible else { return }
+                    do {
+                        try await Task.sleep(for: .seconds(25))
+                        if page == requested, !isPageVisible {
+                            page = nil
+                        }
+                    } catch {
+                        return
+                    }
+                }
         }
+    }
+
+    private var isPageVisible: Bool {
+        guard let requested = page else { return false }
+        return loadedPage == requested
     }
 
     @MainActor
@@ -170,12 +196,26 @@ struct ReferenceLibraryView: View {
 }
 
 struct LibraryOpeningView: View {
+    var title = "Connecting…"
+
     var body: some View {
         ZStack {
-            Color(uiColor: .systemBackground).ignoresSafeArea()
-            ProgressView()
-                .controlSize(.large)
-                .accessibilityLabel("Loading")
+            Color(red: 0.97, green: 0.97, blue: 0.965).ignoresSafeArea()
+            VStack(spacing: 12) {
+                ProgressView()
+                    .controlSize(.large)
+                    .tint(Color(red: 0.26, green: 0.29, blue: 0.32))
+                    .accessibilityHidden(true)
+                Text(title)
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.12, green: 0.15, blue: 0.18))
+                Text("Please wait a moment.")
+                    .font(.subheadline)
+                    .foregroundStyle(Color(red: 0.31, green: 0.34, blue: 0.37))
+            }
+            .multilineTextAlignment(.center)
+            .padding(24)
+            .accessibilityElement(children: .combine)
         }
     }
 }

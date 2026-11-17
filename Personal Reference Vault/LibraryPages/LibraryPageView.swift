@@ -1,26 +1,9 @@
 import SwiftUI
 @preconcurrency import WebKit
 
-struct LibraryPageView: View {
-    @Binding var address: URL?
-    @State private var waitingForFirstPage = true
-
-    var body: some View {
-        ZStack {
-            LibraryPageHost(address: address) {
-                waitingForFirstPage = false
-            }
-            if waitingForFirstPage {
-                LibraryOpeningView()
-                    .allowsHitTesting(false)
-            }
-        }
-    }
-}
-
-private struct LibraryPageHost: UIViewRepresentable {
+struct LibraryPageView: UIViewRepresentable {
     let address: URL?
-    let didLoad: () -> Void
+    let didLoad: (URL) -> Void
 
     func makeUIView(context: Context) -> LibraryBrowser {
         LibraryBrowser()
@@ -32,14 +15,15 @@ private struct LibraryPageHost: UIViewRepresentable {
     }
 }
 
-private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
+final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
     private static let appSchemes: Set<String> = ["tg", "telegram", "mailto", "tel", "sms", "whatsapp", "itms-apps"]
     private static let retryableFailures: Set<Int> = [
         NSURLErrorTimedOut, NSURLErrorCannotFindHost, NSURLErrorCannotConnectToHost,
         NSURLErrorNetworkConnectionLost, NSURLErrorDNSLookupFailed, NSURLErrorNotConnectedToInternet
     ]
 
-    var didLoad: (() -> Void)?
+    var didLoad: ((URL) -> Void)?
+    private var initialNavigation: WKNavigation?
     private var currentAddress: URL?
     private var popups: [WKWebView: UIStackView] = [:]
     private var retryCount = 0
@@ -64,13 +48,15 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
         currentAddress = address
         retry?.cancel()
         retryCount = 0
-        reader.load(URLRequest(url: address))
+        initialNavigation = reader.load(URLRequest(url: address))
     }
 
     func webView(_ surface: WKWebView, didFinish navigation: WKNavigation!) {
         guard surface === reader else { return }
         retry?.cancel()
-        didLoad?()
+        guard let navigation, navigation === initialNavigation, let currentAddress else { return }
+        initialNavigation = nil
+        didLoad?(currentAddress)
     }
 
     func webView(_ surface: WKWebView, decidePolicyFor action: WKNavigationAction,
@@ -103,7 +89,6 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
         tab.backgroundColor = .systemBackground
         attach(tab)
         popups[popup] = tab
-        didLoad?()
         return popup
     }
 
@@ -127,16 +112,17 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
         guard recoveryCount < 2 else { return }
         recoveryCount += 1
         if let address = surface.url ?? (surface === reader ? currentAddress : nil) {
-            surface.load(URLRequest(url: address))
+            let recovery = surface.load(URLRequest(url: address))
+            if surface === reader, initialNavigation != nil { initialNavigation = recovery }
         }
     }
 
     func webView(_ surface: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        handle(error, from: surface)
+        handle(error, from: surface, navigation: navigation)
     }
 
     func webView(_ surface: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        handle(error, from: surface)
+        handle(error, from: surface, navigation: navigation)
     }
 
     private func makePage(_ configuration: WKWebViewConfiguration) -> WKWebView {
@@ -168,7 +154,7 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
         return true
     }
 
-    private func handle(_ error: Error, from surface: WKWebView) {
+    private func handle(_ error: Error, from surface: WKWebView, navigation: WKNavigation?) {
         let failure = error as NSError
         guard failure.domain == NSURLErrorDomain else { return }
         let failed = (failure.userInfo[NSURLErrorFailingURLErrorKey] as? URL)
@@ -186,8 +172,11 @@ private final class LibraryBrowser: UIView, WKNavigationDelegate, WKUIDelegate {
               let address = failed ?? surface.url ?? currentAddress else { return }
         retryCount += 1
         retry?.cancel()
-        let next = DispatchWorkItem { [weak surface] in
-            surface?.load(URLRequest(url: address))
+        let isInitial = navigation != nil && navigation === initialNavigation
+        let next = DispatchWorkItem { [weak self, weak surface] in
+            guard let self, let surface else { return }
+            let retry = surface.load(URLRequest(url: address))
+            if isInitial { self.initialNavigation = retry }
         }
         retry = next
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(retryCount), execute: next)
