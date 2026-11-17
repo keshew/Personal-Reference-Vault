@@ -27,7 +27,7 @@ enum ExportScope: String, CaseIterable, Identifiable {
 }
 
 struct ReferenceExport: Codable {
-    var app = "Personal Reference Vault"
+    var app = "Diamond Luck"
     var version = 1
     var exportedAt = Date()
     var references: [ReferenceItem]
@@ -38,7 +38,7 @@ struct ReferenceExport: Codable {
 
 @MainActor enum ExportBuilder {
     static func make(items: [ReferenceItem], format: ExportFormat, store: VaultStore, title: String) throws -> Data {
-        let text = ([title, "Personal Reference Vault · \(items.count) references", Date().formatted(date: .long, time: .omitted)] + items.map { store.text(for: $0) }).joined(separator: "\n\n")
+        let text = ([title, "Diamond Luck · \(items.count) references", Date().formatted(date: .long, time: .omitted)] + items.map { store.text(for: $0) }).joined(separator: "\n\n")
         switch format {
         case .text: return Data(text.utf8)
         case .json:

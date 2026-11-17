@@ -258,7 +258,7 @@ final class VaultStore: ObservableObject {
         defer { if access { url.stopAccessingSecurityScopedResource() } }
         let bytes = try Data(contentsOf: url)
         let backup = try JSONDecoder().decode(BackupEnvelope.self, from: bytes)
-        guard backup.format == "PersonalReferenceVault", backup.version == 1 else { throw VaultError.invalid("This is not a supported Personal Reference Vault backup.") }
+        guard backup.format == "PersonalReferenceVault", backup.version == 1 else { throw VaultError.invalid("This is not a supported Diamond Luck backup.") }
         try Self.validate(backup.data)
         return backup
     }

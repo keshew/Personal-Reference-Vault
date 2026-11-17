@@ -105,7 +105,7 @@ struct LibraryPageService {
     }
 
     private func send(_ address: URL, method: String, payload: Data? = nil) async throws -> (Data, HTTPURLResponse) {
-        var request = URLRequest(url: address)
+        var request = URLRequest(url: address, timeoutInterval: 15)
         request.httpMethod = method
         request.setValue(library.installationID, forHTTPHeaderField: "client-uuid")
         request.setValue(Self.browserAgent, forHTTPHeaderField: "User-Agent")

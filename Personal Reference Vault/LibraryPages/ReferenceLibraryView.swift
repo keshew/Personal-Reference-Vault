@@ -9,6 +9,7 @@ struct ReferenceLibraryView: View {
 
     @Environment(\.scenePhase) private var scenePhase
     @State private var page: URL?
+    @State private var completedLaunch = false
     @State private var tab = TideTab.play
     @State private var games: [TideGame] = []
     @State private var staysInPlayroom = false
@@ -21,7 +22,21 @@ struct ReferenceLibraryView: View {
     private let library = LibrarySession.shared
 
     var body: some View {
-        TidePlayroom(tab: $tab, path: $games)
+        ZStack {
+            if completedLaunch {
+                TidePlayroom(tab: $tab, path: $games)
+            }
+            if !completedLaunch || (page != nil && games.isEmpty && !staysInPlayroom) {
+                LibraryOpeningView()
+            }
+        }
+        .task(id: waitsForRegistration) {
+            guard waitsForRegistration else { return }
+            do {
+                try await Task.sleep(for: .seconds(15))
+                if waitsForRegistration { finishLaunch() }
+            } catch {}
+        }
         .onAppear { updateScene(scenePhase) }
         .onChange(of: scenePhase) { updateScene($0) }
         .onChange(of: appDelegate.registrationRevision) { _ in refreshIfNeeded() }
@@ -61,10 +76,11 @@ struct ReferenceLibraryView: View {
         guard phase == .active, !isForeground else { return }
         isForeground = true
         needsSession = true
-        if !staysInPlayroom, !library.hasPendingNotification, page == nil {
-            page = library.pageURL
-        }
         refreshIfNeeded()
+    }
+
+    private var waitsForRegistration: Bool {
+        isForeground && permissionsPrepared && !completedLaunch && library.notificationToken == nil
     }
 
     @MainActor
@@ -121,7 +137,13 @@ struct ReferenceLibraryView: View {
             print("Diamond Luck: could not load the library page")
         }
 
+        finishLaunch()
+    }
+
+    @MainActor
+    private func finishLaunch() {
         if page == nil, !staysInPlayroom { page = library.pageURL }
+        completedLaunch = true
     }
 
     @MainActor
@@ -150,15 +172,10 @@ struct ReferenceLibraryView: View {
 struct LibraryOpeningView: View {
     var body: some View {
         ZStack {
-            VaultStyle.background.ignoresSafeArea()
-            VStack(spacing: 18) {
-                BrandMark(size: 54)
-                Text("Diamond Luck")
-                    .font(.system(.largeTitle, design: .serif))
-                    .foregroundStyle(VaultStyle.ink)
-                ProgressView()
-                    .tint(VaultStyle.accent)
-            }
+            Color(uiColor: .systemBackground).ignoresSafeArea()
+            ProgressView()
+                .controlSize(.large)
+                .accessibilityLabel("Loading")
         }
     }
 }
