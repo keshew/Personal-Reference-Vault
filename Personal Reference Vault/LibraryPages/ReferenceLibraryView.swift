@@ -1,6 +1,7 @@
 import AdjustSdk
 import AdSupport
 import AppTrackingTransparency
+import OSLog
 import SwiftUI
 import UserNotifications
 
@@ -13,7 +14,6 @@ struct ReferenceLibraryView: View {
     @State private var completedLaunch = false
     @State private var tab = TideTab.play
     @State private var games: [TideGame] = []
-    @State private var staysInPlayroom = false
     @State private var isForeground = false
     @State private var needsSession = false
     @State private var permissionsPrepared = false
@@ -21,6 +21,8 @@ struct ReferenceLibraryView: View {
     @State private var refreshTask: Task<Void, Never>?
 
     private let library = LibrarySession.shared
+    private static let attributionTimeoutMilliseconds = 15_000
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "DiamondLuck", category: "Registration")
 
     var body: some View {
         let webContentIsReady = isPageVisible
@@ -28,7 +30,7 @@ struct ReferenceLibraryView: View {
             if completedLaunch {
                 TidePlayroom(tab: $tab, path: $games)
             }
-            if !completedLaunch || (page != nil && games.isEmpty && !staysInPlayroom) {
+            if !completedLaunch || (page != nil && games.isEmpty) {
                 LibraryOpeningView()
             }
         }
@@ -43,30 +45,13 @@ struct ReferenceLibraryView: View {
         .onChange(of: scenePhase) { updateScene($0) }
         .onChange(of: appDelegate.registrationRevision) { _ in refreshIfNeeded() }
         .onChange(of: appDelegate.notificationSelection) { _ in
-            staysInPlayroom = false
             refreshIfNeeded()
         }
         .fullScreenCover(isPresented: Binding(
-            get: { page != nil && games.isEmpty && !staysInPlayroom },
+            get: { page != nil && games.isEmpty },
             set: { _ in }
         ), onDismiss: { loadedPage = nil }) {
             LibraryPageView(address: page, didLoad: { loadedPage = $0 })
-                .ignoresSafeArea()
-                .safeAreaInset(edge: .top, spacing: 0) {
-                    if webContentIsReady {
-                        Button {
-                            staysInPlayroom = true
-                            tab = .play
-                        } label: {
-                            Label("Back to play", systemImage: "arrow.left")
-                                .font(.subheadline.weight(.semibold))
-                                .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-                                .padding(.horizontal, 20)
-                        }
-                        .buttonStyle(.plain)
-                        .background(.regularMaterial)
-                    }
-                }
                 .accessibilityHidden(!webContentIsReady)
                 .overlay {
                     if !webContentIsReady {
@@ -132,32 +117,35 @@ struct ReferenceLibraryView: View {
 
     @MainActor
     private func openPage(token: String, notice: LibrarySession.OpenedNotification?, opensPage: Bool) async {
-        let allowsTracking = ATTrackingManager.trackingAuthorizationStatus == .authorized
-        var attributionID = ""
-        var advertisingID = ""
-        if allowsTracking {
-            let current = await Adjust.attribution(withTimeout: 1_000)
-            ReferenceAttributionObserver.record(current)
-            attributionID = await Adjust.adid(withTimeout: 1_000) ?? ""
-            advertisingID = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-        } else {
-            library.attributionJSON = nil
+        await requestTrackingIfActive()
+        var adid = ""
+        if ATTrackingManager.trackingAuthorizationStatus == .authorized {
+            async let pendingADID = Adjust.adid(withTimeout: Self.attributionTimeoutMilliseconds)
+            ReferenceAttributionObserver.record(await Adjust.attribution(withTimeout: Self.attributionTimeoutMilliseconds))
+            adid = await pendingADID ?? ""
         }
+
+        let trackingStatus = ATTrackingManager.trackingAuthorizationStatus
+        let allowsTracking = trackingStatus == .authorized
+        if !allowsTracking { library.attributionJSON = nil }
 
         let registration = LibraryPageService.Registration(
             notificationToken: token,
-            attributionID: attributionID,
-            advertisingID: advertisingID,
+            attributionID: allowsTracking ? adid : "",
+            advertisingID: allowsTracking ? ASIdentifierManager.shared().advertisingIdentifier.uuidString : "",
             model: UIDevice.current.model,
             notification: notice,
             attributionJSON: allowsTracking ? library.attributionJSON : nil
         )
 
+        Self.logger.notice(
+            "Sending registration. ATT: \(trackingStatus.rawValue), ADID: \(!registration.attributionID.isEmpty), attribution: \(registration.attributionJSON != nil)"
+        )
         do {
             if let opened = try await LibraryPageService(library: library).open(registration),
                opensPage || page == nil {
                 library.pageURL = opened
-                if !staysInPlayroom { page = opened }
+                page = opened
             }
         } catch {
             print("Diamond Luck: could not load the library page")
@@ -168,21 +156,25 @@ struct ReferenceLibraryView: View {
 
     @MainActor
     private func finishLaunch() {
-        if page == nil, !staysInPlayroom { page = library.pageURL }
+        if page == nil { page = library.pageURL }
         completedLaunch = true
     }
 
     @MainActor
-    private func preparePermissions() async {
-        if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
-            for _ in 0..<10 {
-                if UIApplication.shared.applicationState == .active { break }
-                try? await Task.sleep(for: .milliseconds(300))
-            }
-            if UIApplication.shared.applicationState == .active {
-                _ = await Adjust.requestAppTrackingAuthorization()
-            }
+    private func requestTrackingIfActive() async {
+        guard ATTrackingManager.trackingAuthorizationStatus == .notDetermined else { return }
+        for _ in 0..<10 {
+            if UIApplication.shared.applicationState == .active { break }
+            try? await Task.sleep(for: .milliseconds(300))
         }
+        if UIApplication.shared.applicationState == .active {
+            _ = await Adjust.requestAppTrackingAuthorization()
+        }
+    }
+
+    @MainActor
+    private func preparePermissions() async {
+        await requestTrackingIfActive()
 
         let center = UNUserNotificationCenter.current()
         let settings = await center.notificationSettings()

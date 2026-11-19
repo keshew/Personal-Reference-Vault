@@ -38,15 +38,15 @@ struct LibraryPageService {
                     "clickLabel": "click_label", "costType": "cost_type", "costCurrency": "cost_currency"
                 ]
                 for (field, rawKey) in fields {
-                    attribution[field] = values[rawKey] as? String ?? values[field] as? String ?? ""
+                    let value = values[rawKey] as? String ?? values[field] as? String ?? ""
+                    attribution[field] = value
+                    if !value.isEmpty, rawKey != field { attribution[rawKey] = value }
                 }
                 attribution["costAmount"] = values["cost_amount"] as? Double ?? values["costAmount"] as? Double ?? 0
                 attribution["jsonResponse"] = raw
             }
-            return try JSONSerialization.data(withJSONObject: [
-                "adjust": attribution,
-                "referrer": "utm_source=appstore&utm_medium=organic"
-            ])
+            if !attributionID.isEmpty { attribution["adid"] = attributionID }
+            return try JSONSerialization.data(withJSONObject: ["adjust": attribution])
         }
     }
 
